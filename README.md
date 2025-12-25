@@ -2,6 +2,9 @@
 
 基于 **FastMCP 2.0** 的 MCP 网关，将多个第三方 MCP Server 聚合为少量顶层工具，大幅减少 LLM 的上下文占用。
 
+## 效果图
+![网关mcp示例图](assets/image.png)
+
 ## 工作原理
 
 ```
