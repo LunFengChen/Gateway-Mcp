@@ -1,6 +1,6 @@
 # MCP Gateway - 二级路由聚合网关
 
-基于 **FastMCP 2.0** 的 MCP 网关，将多个第三方 MCP Server 聚合为少量顶层工具，大幅减少 LLM 的上下文占用。
+一个 MCP 网关，将多个第三方 MCP Server 聚合为少量顶层工具，大幅减少 LLM 的上下文占用与解决某些IDE没法支持太多tools的问题。
 
 ## 效果图
 ![网关mcp示例图](assets/image.png)
