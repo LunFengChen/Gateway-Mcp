@@ -32,7 +32,7 @@ pip install fastmcp
 
 ## 配置
 
-编辑 `config.json`，添加您的上游 MCP Server：
+编辑 `config.json`，添加您原来的 MCP Server：
 
 ```json
 {
@@ -53,10 +53,26 @@ pip install fastmcp
 }
 ```
 
-## 运行
-
-```bash
-python gateway.py
+去IDE中编辑Gateway-Mcp的配置文件，我的参考如下
+> 理论上autoApprove不需要加，但是为了解决某些ide不能自动调用工具的问题，我加了一下，你的估计不需要
+```json
+{
+  "mcpServers": {
+    "GateWay-Mcp": {
+      "command": "C:\\Users\\xiaofeng\\.pyenv\\pyenv-win\\versions\\3.11.9\\python.exe",
+      "args": [
+        "C:\\Users\\xiaofeng\\Desktop\\projects\\Gateway-Mcp\\gateway_mcp_server.py"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "use_ida-pro-mcp",
+        "use_jadx-mcp-server",
+        "use_adb-mcp",
+        "use_proxypin-mcp"
+      ]
+    }
+  }
+}
 ```
 
 ## 使用示例
@@ -79,7 +95,7 @@ use_git(action="git_commit", params={"message": "fix: bug"})
 
 ## 添加更多 MCP Server
 
-只需在 `config.json` 中添加新的条目，Gateway 会自动为其创建对应的 `use_{name}` 工具。
+只需在 `mcps_config.json` 中添加新的条目，Gateway 会自动为其创建对应的 `use_{name}` 工具和拉取工具最新描述。
 
 ## 许可证
 
