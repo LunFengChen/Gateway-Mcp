@@ -21,6 +21,7 @@ class ServerConfig:
     command: str
     args: list[str] = field(default_factory=list)
     env: dict[str, str] = field(default_factory=dict)
+    tools: list[str] = field(default_factory=list)
     
     @property
     def client_config(self) -> dict:
@@ -60,29 +61,71 @@ class MCPGateway:
     
     def add_server(self, server: ServerConfig) -> MCPGateway:
         """添加上游服务器并注册对应工具"""
+        # 尝试动态获取工具列表
+        try:
+            import asyncio
+            print(f"正在连接子服务 {server.name} 以获取工具列表...")
+            tools = asyncio.run(self._fetch_tools_dynamic(server))
+            server.tools = tools
+            print(f"成功获取 {server.name} 的 {len(tools)} 个工具")
+        except Exception as e:
+            print(f"⚠️ 初始化 {server.name} 失败或无法获取工具: {e}")
+            # 如果获取失败，仍然注册服务，但没有工具列表提示
+        
         self.servers[server.name] = server
         self._register_tool(server)
         return self
+
+    async def _fetch_tools_dynamic(self, server: ServerConfig) -> list[str]:
+        """动态获取工具列表并缓存"""
+        async with Client(server.client_config) as client:
+            tools = await client.list_tools()
+            
+            # 格式化工具描述：Name: One-line Description
+            formatted_tools = []
+            for t in tools:
+                desc = (t.description or "无描述").strip().split('\n')[0]
+                if len(desc) > 80:
+                    desc = desc[:77] + "..."
+                formatted_tools.append(f"{t.name}: {desc}")
+
+            # 更新缓存，供 list 命令使用 (使用详细版)
+            self._tools_cache[server.name] = [
+                f"{t.name}: {t.description or '无描述'}" 
+                for t in tools
+            ]
+            
+            # 返回简要描述列表用于 Prompt
+            return formatted_tools
     
     def _register_tool(self, server: ServerConfig) -> None:
         """为上游服务器注册聚合工具"""
         
         @self.app.tool(
             name=f"use_{server.name}",
-            description=self._build_description(server.name),
+            description=self._build_description(server),
         )
         async def dispatch(action: str, params: dict[str, Any] = {}) -> str:
             return await self._handle_dispatch(server, action, params)
     
-    def _build_description(self, name: str) -> str:
+    def _build_description(self, server: ServerConfig) -> str:
         """构建工具描述"""
-        return f"""与 **{name}** 子系统交互。
+        base_desc = f"""与 **{server.name}** 子系统交互。
 
 **参数**:
 - `action`: 要调用的工具名 (使用 "list" 查看所有可用工具)
 - `params`: 工具参数 (字典)
 
 **示例**: action="read_file", params={{"path": "/tmp/test.txt"}}"""
+
+        if server.tools:
+            # 只显示前 20 个工具，避免描述过长
+            display_tools = server.tools[:30]
+            tools_list = "\n".join(f"- {t}" for t in display_tools)
+            more_msg = f"\n... (还有 {len(server.tools) - 30} 个工具，请使用 list 查看完整列表)" if len(server.tools) > 30 else ""
+            return f"{base_desc}\n\n**可用工具列表** (部分):\n{tools_list}{more_msg}"
+        
+        return base_desc
     
     async def _handle_dispatch(
         self, 
@@ -97,16 +140,23 @@ class MCPGateway:
     
     async def _list_tools(self, server: ServerConfig) -> str:
         """列出上游服务器的所有工具"""
-        if server.name not in self._tools_cache:
-            try:
-                async with Client(server.client_config) as client:
-                    tools = await client.list_tools()
-                    self._tools_cache[server.name] = [
-                        f"{t.name}: {t.description or '无描述'}" 
-                        for t in tools
-                    ]
-            except Exception as e:
-                return f"❌ 无法获取工具列表: {e}"
+        # 优先使用缓存
+        if server.name in self._tools_cache:
+            tools = self._tools_cache[server.name]
+            return f"📦 [{server.name}] 可用工具 ({len(tools)} 个):\n\n" + "\n".join(
+                f"  • {t}" for t in tools
+            )
+
+        # 缓存未命中（运行时重新获取）
+        try:
+            async with Client(server.client_config) as client:
+                tools = await client.list_tools()
+                self._tools_cache[server.name] = [
+                    f"{t.name}: {t.description or '无描述'}" 
+                    for t in tools
+                ]
+        except Exception as e:
+            return f"❌ 无法获取工具列表: {e}"
         
         tools = self._tools_cache[server.name]
         return f"📦 [{server.name}] 可用工具 ({len(tools)} 个):\n\n" + "\n".join(
@@ -154,7 +204,7 @@ class MCPGateway:
 
 def create_gateway() -> MCPGateway:
     """创建并配置网关实例"""
-    config_path = Path(__file__).parent / "config.json"
+    config_path = Path(__file__).parent / "mcps_config.json"
     return MCPGateway().load_config(config_path)
 
 
