@@ -1,0 +1,16 @@
+[project]
+name = "mcp-gateway"
+version = "0.1.0"
+description = "MCP Gateway - 二级路由聚合多个 MCP Server"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=2.0.0",
+]
+
+[project.scripts]
+mcp-gateway = "gateway:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

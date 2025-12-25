@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "/home/xiaofeng"
+            ]
+        },
+        "git": {
+            "command": "uvx",
+            "args": [
+                "mcp-server-git",
+                "--repository",
+                "/home/xiaofeng/reverse-mcps"
+            ]
+        }
+    }
+}
