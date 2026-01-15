@@ -27,15 +27,15 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/你的用户名/reverse-mcps.git
-cd reverse-mcps/mcp_gateway
+git clone https://github.com/LunFengChen/Gateway-Mcp.git
+cd Gateway-Mcp
 
 pip install fastmcp
 ```
 
 ## 配置
 
-编辑 `config.json`，添加您原来的 MCP Server：
+编辑 Gateway-Mcp 中的 `mcps_config.json`，添加您原来json中的 MCP Server：
 
 ```json
 {
@@ -56,7 +56,7 @@ pip install fastmcp
 }
 ```
 
-去IDE中编辑Gateway-Mcp的配置文件，我的参考如下
+去IDE中配置顶层mcp，也就是这里的Gateway-Mcp，配置文件的参考如下
 > 理论上autoApprove不需要加，但是为了解决某些ide不能自动调用工具的问题，我加了一下，你的估计不需要
 ```json
 {
