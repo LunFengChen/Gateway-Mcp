@@ -16,7 +16,7 @@
 │   - use_filesystem(action, params)                  │
 ├─────────────────────────────────────────────────────┤
 │ 内部连接:                                           │
-│   ├── @modelcontextprotocol/server-filesystem      │
+│   ├── mcp-server-filesystem      │
 │   └── mcp-server-git                               │
 └─────────────────────────────────────────────────────┘
 ```
