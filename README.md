@@ -56,7 +56,7 @@ pip install fastmcp
 }
 ```
 
-去IDE中配置顶层mcp，也就是这里的Gateway-Mcp，配置文件的参考如下
+去IDE中配置顶层mcp，也就是这里的Gateway-Mcp，配置文件的参考如下（需要你该python.exe和.py文件路径哦）
 > 理论上autoApprove不需要加，但是为了解决某些ide不能自动调用工具的问题，我加了一下，你的估计不需要
 ```json
 {
@@ -80,7 +80,7 @@ pip install fastmcp
 
 ## 使用示例
 
-LLM 调用方式：
+LLM 调用方式简单展示：
 
 ```python
 # 列出 filesystem 的所有可用工具
