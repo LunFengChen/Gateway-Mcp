@@ -5,12 +5,15 @@ description = "MCP Gateway - 二级路由聚合多个 MCP Server"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp>=2.0.0",
+    "fastmcp>=3.4.2",
 ]
 
 [project.scripts]
-mcp-gateway = "gateway:main"
+mcp-gateway = "gateway_mcp_server:main"
+
+[tool.setuptools]
+py-modules = ["gateway_mcp_server"]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
