@@ -29,9 +29,9 @@
       "disabled": false
     },
     "jadx-mcp-server": {
-      "command": "/home/xiaofeng/Applications/jadx-mcp-server/.venv/bin/python",
+      "command": "/home/xiaofeng/Desktop/projects/jadx-mcp-server/.venv/bin/python",
       "args": [
-        "/home/xiaofeng/Applications/jadx-mcp-server/jadx_mcp_server.py",
+        "/home/xiaofeng/Desktop/projects/jadx-mcp-server/jadx_mcp_server.py",
         "--jadx-host",
         "127.0.0.1",
         "--jadx-port",
@@ -56,6 +56,23 @@
         "bn"
       ],
       "disabled": false
+    },
+    "proxypin-mcp": {
+      "command": "/home/xiaofeng/Desktop/projects/proxypin-mcp-server/.venv/bin/python",
+      "args": [
+        "/home/xiaofeng/Desktop/projects/proxypin-mcp-server/proxypin_mcp_server.py"
+      ],
+      "profiles": [
+        "reverse",
+        "traffic",
+        "proxypin",
+        "capture"
+      ],
+      "disabled": false,
+      "env": {
+        "PROXYPIN_HOST": "127.0.0.1",
+        "PROXYPIN_PORT": "17777"
+      }
     }
   }
 }
