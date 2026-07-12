@@ -73,6 +73,42 @@
         "PROXYPIN_HOST": "127.0.0.1",
         "PROXYPIN_PORT": "17777"
       }
+    },
+    "reqable": {
+      "command": "/usr/share/reqable/mcp-server",
+      "args": [],
+      "profiles": [
+        "reverse",
+        "traffic",
+        "reqable",
+        "capture"
+      ],
+      "disabled": false
+    },
+    "chrome-mcp": {
+      "command": "/home/xiaofeng/.nvm/versions/node/v24.16.0/bin/mcp-chrome-stdio",
+      "args": [],
+      "profiles": [
+        "browser",
+        "chrome",
+        "web"
+      ],
+      "disabled": false,
+      "env": {
+        "MCP_HTTP_PORT": "12306"
+      }
+    },
+    "codebase-memory-mcp": {
+      "command": "/home/xiaofeng/.local/bin/codebase-memory-mcp",
+      "args": [],
+      "profiles": [
+        "code",
+        "codebase",
+        "memory",
+        "graph",
+        "search"
+      ],
+      "disabled": false
     }
   }
 }

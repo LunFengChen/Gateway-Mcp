@@ -606,6 +606,13 @@ def _extract_content(result: Any) -> str:
     return "\n".join(parts)
 
 
+def _extract_result(result: Any) -> str | dict[str, Any]:
+    structured_content = getattr(result, "structured_content", None)
+    if structured_content is not None:
+        return structured_content
+    return _extract_content(result)
+
+
 def _create_search_gateway(config: GatewayConfig) -> FastMCP[Any]:
     app = FastMCP(name="MCP-Gateway")
     index = ToolIndex(config)
@@ -758,11 +765,13 @@ def _create_search_gateway(config: GatewayConfig) -> FastMCP[Any]:
                 "name": name,
                 "server": target_server.name,
             }
-        text = _extract_content(result)
+        payload = _extract_result(result)
         limit = config.settings.call_result_max_chars if max_chars is None else max_chars
         if limit and limit > 0:
-            return _truncate(text, limit)
-        return text
+            if not isinstance(payload, str):
+                payload = json.dumps(payload, ensure_ascii=False, default=str)
+            return _truncate(payload, limit)
+        return payload
 
     return app
 
